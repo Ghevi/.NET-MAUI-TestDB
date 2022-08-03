@@ -1,0 +1,38 @@
+﻿@page "/"
+
+@using TestDB.Entities
+@inject MyDbService _dbService
+
+@code{
+    private String _ex = String.Empty;
+    private User? _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await _dbService.AddUserAsync();
+            _user = await _dbService.GetUserAsync();
+        }
+        catch (Exception ex)
+        {
+            _ex = ex.ToString();
+        }
+
+        await base.OnInitializedAsync();
+    }
+}
+
+<div>
+    <div>
+        <h4>User Data:</h4>
+        @if(_user is not null)
+        {
+            <span>It Works! @_user.Id @_user.Email</span>
+        }
+    </div>
+    <h2>Exception</h2>
+    <div class="w-75">
+        @_ex
+    </div>
+</div>
